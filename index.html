@@ -153,7 +153,7 @@
   .step.done .dot{background:var(--green);border-color:var(--green);color:#08210f;}
   .step.done .line{background:var(--green);}
   .step.current .dot{background:var(--amber);border-color:var(--amber);color:#1a1204;}
-  .step.rejected .dot{background:var(--red);border-color:var(--red);color:#2a0810;}
+  .step.dropped .dot{background:var(--red);border-color:var(--red);color:#2a0810;}
 
   /* tables / cards */
   table{width:100%;border-collapse:collapse;font-size:13px;}
@@ -163,7 +163,7 @@
   .badge{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;padding:3px 8px;border-radius:20px;letter-spacing:0.3px;white-space:nowrap;}
   .b-pending{background:var(--blue-dim);color:var(--blue);}
   .b-approved{background:var(--green-dim);color:var(--green);}
-  .b-rejected{background:var(--red-dim);color:var(--red);}
+  .b-dropped{background:var(--red-dim);color:var(--red);}
 
   .role-picker{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
   .role-picker button{background:#101d30;border:1px solid var(--border);color:var(--text-dim);padding:8px 14px;border-radius:20px;font-size:12.5px;cursor:pointer;}
@@ -255,7 +255,7 @@
           <option value="Ranjangaon VEH">Ranjangaon VEH</option>
           <option value="Tiruvallur">Tiruvallur</option>
         </select>
-        <p class="hint">Pick your plant, then claim a category slot below — first come, first served.</p>
+        <p class="hint">Pick your plant, then claim a category slot below.</p>
       </div>
 
       <fieldset>
@@ -284,7 +284,7 @@
       </div>
 
       <div class="field full">
-        <label>Criteria / project description</label>
+        <label>Project description</label>
         <textarea id="f-criteria" placeholder="Problem statement, objective, expected impact, judging criteria..."></textarea>
       </div>
 
@@ -758,7 +758,7 @@
       members: members,
       criteria: criteria,
       plantManager: {name:pmName, email:pmEmail},
-      status: 'pending_pm', // pending_pm -> approved / rejected
+      status: 'pending_pm', // pending_pm -> approved / Dropped
       log: [{event:'submitted', at: new Date().toISOString()}],
       createdAt: new Date().toISOString()
     };
@@ -818,7 +818,7 @@
 
   function statusBadge(status){
     if(status === 'approved') return '<span class="badge b-approved">Approved</span>';
-    if(status === 'rejected') return '<span class="badge b-rejected">Rejected</span>';
+    if(status === 'Dropped') return '<span class="badge b-dropped">Dropped</span>';
     return '<span class="badge b-pending">Pending Plant Manager</span>';
   }
 
@@ -892,7 +892,7 @@
     box.querySelector('#conflictRejectBtn').addEventListener('click', function(btnEv){
       var rejectBtn = box.querySelector('#conflictRejectBtn');
       rejectBtn.disabled = true;
-      apiDecide(conflict.id, 'rejected', 'Superseded — Plant Manager approved a different project for this category.', function(err, result){
+      apiDecide(conflict.id, 'dropped', 'Superseded — Plant Manager approved a different project for this category.', function(err, result){
         rejectBtn.disabled = false;
         if(err || (result && result.error)){
           alert('Could not reject that project. Check your connection and try again.');
@@ -915,7 +915,7 @@
       if(existingBox){ existingBox.style.display = 'none'; existingBox.innerHTML = ''; }
     }
 
-    var status = (act === 'reject') ? 'rejected' : 'approved';
+    var status = (act === 'reject') ? 'Dropped' : 'approved';
 
     if(status === 'approved'){
       var conflict = projects.find(function(x){
@@ -932,8 +932,8 @@
     var subject, body, notifyTo;
 
     if(act === 'reject'){
-      subject = 'Rejected: ' + p.category + ' project — ' + p.plant + ' (' + p.id + ')';
-      body = "Your project registration was rejected by the Plant Manager.\n\nReason: " + (reason || 'No reason given') + "\n\nYou're welcome to resubmit for this category if appropriate.";
+      subject = 'Dropped: ' + p.category + ' project — ' + p.plant + ' (' + p.id + ')';
+      body = "Your project registration was dropped by the Plant Manager.\n\nReason: " + (reason || 'No reason given') + "\n\nYou're welcome to resubmit for this category if appropriate.";
       notifyTo = p.leader.email;
     }
 
@@ -1024,13 +1024,13 @@
     var np = normPlant(plantName);
     var projects = loadProjects();
     var stats = {};
-    CATEGORIES.forEach(function(cat){ stats[cat.name] = {total:0, pending:0, approved:0, rejected:0, approvedProj:null}; });
+    CATEGORIES.forEach(function(cat){ stats[cat.name] = {total:0, pending:0, approved:0, Dropped:0, approvedProj:null}; });
     projects.forEach(function(p){
       if(normPlant(p.plant) !== np || !stats[p.category]) return;
       stats[p.category].total++;
       if(p.status === 'pending_pm') stats[p.category].pending++;
       if(p.status === 'approved'){ stats[p.category].approved++; stats[p.category].approvedProj = p; }
-      if(p.status === 'rejected') stats[p.category].rejected++;
+      if(p.status === 'Dropped') stats[p.category].Dropped++;
     });
     return stats;
   }
