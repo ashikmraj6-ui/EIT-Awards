@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Project Registration Portal</title>
+<title>EIT Project Registration Portal</title>
 <style>
   :root{
     --bg:#0F1B2B;
@@ -217,7 +217,7 @@
     <div class="brand">
       <div class="brand-mark">PR</div>
       <div>
-        <h1>Project Registration Portal</h1>
+        <h1>EIT Project Registration Portal</h1>
         <p>SUBMIT &middot; PLANT MANAGER &middot; ADMIN</p>
       </div>
     </div>
@@ -238,7 +238,7 @@
   <!-- ============ SUBMIT VIEW ============ -->
   <div class="view active" id="view-submit">
     <div class="panel">
-      <h2>New Project Registration</h2>
+      <h2>New EIT Project Registration</h2>
       <p class="sub">Submit for any category — the Plant Manager can approve only one project per category per plant.</p>
 
       <div class="field">
@@ -269,8 +269,8 @@
             <input type="text" id="f-leader-fn" placeholder="Function / role">
           </div>
         </div>
-        <div class="field"><label>Tenure — start</label><input type="date" id="f-start"></div>
-        <div class="field"><label>Tenure — end</label><input type="date" id="f-end"></div>
+        <div class="field"><label>Project — start</label><input type="date" id="f-start"></div>
+        <div class="field"><label>Project— end</label><input type="date" id="f-end"></div>
       </div>
 
       <div class="field full">
@@ -280,7 +280,7 @@
       </div>
 
       <div class="field full">
-        <label>Criteria / project description</label>
+        <label>Project description</label>
         <textarea id="f-criteria" placeholder="Problem statement, objective, expected impact, judging criteria..."></textarea>
       </div>
 
@@ -371,7 +371,7 @@
   </div>
 </div>
 
-<footer>PROJECT REGISTRATION PORTAL &mdash; RUNS ENTIRELY IN YOUR BROWSER, NO SERVER REQUIRED</footer>
+<footer>EIT PROJECT REGISTRATION PORTAL &mdash;</footer>
 
 <script>
 (function(){
@@ -736,7 +736,7 @@
     if(!dept) missing.push('Department');
     if(!leaderName || !leaderEmail) missing.push('Project leader name & email');
     if(members.length === 0) missing.push('At least one team member');
-    if(!start || !end) missing.push('Tenure start/end');
+    if(!start || !end) missing.push('Project start/end');
     if(!criteria) missing.push('Criteria / description');
     if(!pmName || !pmEmail) missing.push('Plant manager name & email');
 
@@ -947,7 +947,7 @@
 
   document.getElementById('exportCsv').addEventListener('click', function(){
     var projects = loadProjects();
-    var rows = [['ID','Plant','Category','Department','Leader','Leader Function','Leader Email','Team Members','Tenure Start','Tenure End','Plant Manager','Status','Submitted']];
+    var rows = [['ID','Plant','Category','Department','Leader','Leader Function','Leader Email','Team Members','Project Start','Project End','Plant Manager','Status','Submitted']];
     projects.forEach(function(p){
       var teamStr = (p.members || []).map(function(m){
         return m.fn ? (m.name + ' (' + m.fn + ')') : m.name;
