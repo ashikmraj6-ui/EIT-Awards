@@ -855,7 +855,7 @@
   }
   function statusLabel(status){
     if(status === 'approved') return 'Approved';
-    if(status === 'rejected') return 'Dropped';
+    if(status === 'rejected') return 'Drop';
     return 'Pending Plant Manager';
   }
 
@@ -892,7 +892,7 @@
         '<textarea class="reason" placeholder="Optional comment"></textarea>' +
         '<div class="queue-actions">' +
         '<button class="btn approve small" data-act="approve" data-id="' + p.id + '">Approve</button>' +
-        '<button class="btn reject small" data-act="reject" data-id="' + p.id + '">Dropped</button>' +
+        '<button class="btn reject small" data-act="reject" data-id="' + p.id + '">Drop</button>' +
         '</div>' +
         '<div class="conflict-box"></div>';
       list.appendChild(item);
